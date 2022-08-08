@@ -20,7 +20,8 @@ const MemoryStore = require('memorystore')(session)
 
 //라우팅
 const pageRoute = require('./route') //page route 
-const apiRoute = require('./api')    //api route
+const apiRoute = require('./api')(app, io)    //api route
+const testRoute = require('./test')(app, io)
 
 const sessionMiddleware = session({
 	secret: 'secret key', // should be setup
@@ -38,6 +39,7 @@ function init(){
 	app.use(sessionMiddleware)
 	app.use('/', pageRoute)
 	app.use('/api', apiRoute)
+	app.use('/test', testRoute) // test router
 	app.use(express.static('front/public'))
 	app.use('/js', express.static('front/static/js'))
 	app.use('/css', express.static('front/static/css'))
@@ -60,14 +62,20 @@ function init(){
 	/*
 		@TODO
 		같은 세션을 공유하고 있으면 같은 대화방으로 인식하게 해야함
+		웹 세션이 끊어지면 socket도 연결 종료 
+		새로고침해도 메시지 내용 복구 가능하게
+
+		만약 새로운 connection이 기존 유저라면 new user emit 패스 
 	*/
 	io.on('connection', (socket) => {
-		console.log(`new user connected ${socket.request.session.user}`)
+		//console.log(`new socket : ${socket.id}`)
 		// 유저가 접속했을 시 접속자 명단 sender 제외하고 전송
+		console.log(`new user connected ${socket.request.session.user}`)
 		io.emit('user connected', `new user(${socket.request.session.user}) connected!`)
 		// 클라이언트로 부터 온 메시지를 연결된 클라이언트에게 전송 
 		// sender를 제외하고는 other type으로 전송 
 		// sender에게는 me type으로 전송
+		// 해당 유저가 세션이 만료된 유저인지도 확인하기
 		socket.on('chat message', (msg) => {
 			let sender = socket.request.session.user
 			let now = get_current_time()
@@ -89,6 +97,13 @@ function init(){
 	})
 }
 
+
+/*
+	해당 socket이 새로고침했을 때 새로운 유저로 인식하지 못하게 해야함 
+*/
+function new_socket_user(socket){
+
+}
 
 
 // msg packet를 생성한다. type 신경

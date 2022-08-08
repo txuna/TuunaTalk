@@ -17,6 +17,12 @@ function init(){
         }
     })
 
+    // 서버와의 연결 종료 다시 로그인화면으로 전환
+    socket.on('disconnect', () => {
+        console.log("disconnected")
+        window.location.href = '/'
+    })
+
     // socket 수신 대기
     socket.on('chat message', (packet) =>{
         recv_msg(packet)
@@ -33,9 +39,25 @@ function init(){
     // err['status'] and err['msg'] -> 에러 발생시 
     socket.on('connect_error', (err) => {
         alert("disconnected from server")
+        socket.close()
+    })
+
+    socket.on('test', (msg) => {
+        append_system_msg("system", msg)
     })
 }
 
+async function test(){
+    const response = await fetch('/test/test', {
+        method : 'POST',
+        headers : {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    const data = await response.json() 
+    console.log(data)
+}
 
 async function logout(){
     const response = await fetch('/api/logout', {
