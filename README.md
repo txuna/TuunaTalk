@@ -14,9 +14,9 @@ express-session을 이용하여 세션을 획득한 사용자만 chat app(socket
 node index.js 
 
 ### Todo 
-:heavy_check_mark: 새로고침을 진행해도 대화내용 백업 및 복구 진행 
-:heavy_check_mark: 새로고침을 했을 때 새로운 유저로 인식하지 않기 
-:heavy_check_mark: 동일한 세션ID의 경우 바로 대화내용 복구하기 및 새로운 유저로 인식하지 않기
+:heavy_check_mark: 새로고침을 진행해도 대화내용 백업 및 복구 진행   
+:heavy_check_mark: 새로고침을 했을 때 새로운 유저로 인식하지 않기   
+:heavy_check_mark: 동일한 세션ID의 경우 바로 대화내용 복구하기 및 새로운 유저로 인식하지 않기  
 
 # Image
 ![image login.png](./login.png)
