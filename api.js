@@ -1,18 +1,19 @@
 module.exports = (app, io) => {
     const router = require('express').Router(); 
 
+    // login을 했을 때 만약 이미 session이 존재한다면 
     router.post('/login', (req, res) => {
         if(req.session.user){ 
             res.send({
                 'status' : 200, 
-                'msg' : 'Successfully login'
+                'msg' : 'Already Login'
             })
         }else{
             //console.log(req.body['username'])
             req.session.user = req.body['username'] //session 생성 (미들웨어로 작동)
             res.send({
                 'status' : 200, 
-                'msg' : 'Already Login'
+                'msg' : 'Successfully login'
             })
         }
     })
